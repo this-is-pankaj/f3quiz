@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "serve": "ng build && nodemon index"
   },
   "private": true,
   "dependencies": {
@@ -19,7 +20,16 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "font-awesome": "^4.7.0",
+    "mongoose": "^5.9.11",
+    "ngx-socket-io": "^3.0.1",
     "rxjs": "~6.4.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },

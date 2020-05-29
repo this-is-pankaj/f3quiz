@@ -1,0 +1,23 @@
+<div class="create-group">
+  <div class="create-option">
+    <button class="btn btn-primary q-btn" (click)="showForm()">Create</button>
+  </div>
+  <div class="create-group-form-wrapper" [hidden]="!isFormOpen">
+    <form  class="create-group-form" [formGroup]="createGroupForm" (ngSubmit)="save()">
+      <div class="form-header">
+        <div class="form-header-options">
+          <button class="btn btn-danger close-btn" (click)="closeForm()"><span class="fa fa-close"></span></button>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="form-group" [ngClass]="{'error': isErroneous(createGroupForm, 'name')}">
+          <label class="field-label" for="name"> Room Name </label>
+          <input class="form-control" placeholder="Room Name" id="name" name="name" formControlName="name"/>
+        </div>
+        <div class="form-action-section col-12 text-right">
+          <input type="submit" value="Save" class="btn btn-primary q-btn" [disabled]="createGroupForm.invalid"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

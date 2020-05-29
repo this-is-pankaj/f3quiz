@@ -1,0 +1,30 @@
+<div class="my-groups">
+  <div class="group-options">
+    <app-create-group></app-create-group>
+  </div>
+
+  <div class="view-group-options table-responsive">
+    <table class="table table-bordered view-groups-table">
+      <thead class="text-center table-head">
+        <tr>
+          <th>Group Name</th>
+          <th>Games Played</th>
+          <th class="slim-col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let grp of groupsList$">
+          <td>{{grp.name}}</td>
+          <td>{{grp.games.length}}</td>
+          <td class="slim-col">
+            <button class="btn btn-primary q-btn grp-btn" (click)="startGame(grp)"><span class="fa fa-gamepad"></span></button>
+            <button  class="btn  btn-danger grp-btn"><span class="fa fa-minus"></span></button>
+          </td>
+        </tr>
+        <tr *ngIf="!groupsList$.length">
+          <td class="text-center" colspan="3"> No Group Found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

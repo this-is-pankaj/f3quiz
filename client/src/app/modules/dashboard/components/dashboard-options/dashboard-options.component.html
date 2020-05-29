@@ -1,0 +1,28 @@
+<div class="dashboard-options">
+  <div class="dashboard-option text-center" *ngIf="isAdmin">
+    <!-- <p class="no-margin dashboard-option-icon">
+      <span class="fa fa-server"></span>
+    </p> -->
+    <p class="no-margin dashboard-option-text" *ngIf="isAdmin">
+      <a routerLink="mygroups" class="q-link">Manage Groups</a>
+    </p>
+    <p class="no-margin dashboard-option-text"  *ngIf="isAdmin">
+      <a routerLink="/questions" class="q-link">Manage Questions</a>
+    </p>
+  </div>
+  <div class="available-games" *ngIf="!isAdmin">
+    <div class="room-and-games"  *ngFor="let room of rooms">
+      <div class="room-title text-center">
+        <p class="no-margin">Group Name: <span class="room-name">{{room.roomName}}</span></p>
+      </div>
+      <ul class="game-list">
+        <li class="game" *ngFor="let game of room.games; let idx = index;">
+          <a class="btn btn-primary q-btn" [routerLink]="game.url">{{room.roomName}} Game {{idx+1}}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="" *ngIf="!rooms.length">
+      <p>No Games Found</p>
+    </div>
+  </div>
+</div>

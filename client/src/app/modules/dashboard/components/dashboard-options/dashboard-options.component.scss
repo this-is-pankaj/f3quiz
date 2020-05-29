@@ -1,0 +1,26 @@
+.dashboard-options {
+  display: flex;
+  
+  .dashboard-option {
+    cursor: pointer;
+    padding: 10px;
+    width: 200px;
+  }
+
+  .available-games {
+    .room-and-games {
+      margin: 40px 0;
+
+      .room-title {
+        .room-name {
+          font-size: 18px;
+          font-weight: bold;
+        }
+      }
+      .game-list {
+        list-style-type: none;
+        margin: 40px 0;
+      }
+    }
+  }
+}

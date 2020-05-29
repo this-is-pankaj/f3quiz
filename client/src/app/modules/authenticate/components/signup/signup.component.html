@@ -1,0 +1,42 @@
+<div class="signup">
+    <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="signup()">
+      <div  class="row" formGroupName="name">
+        <div class="form-group  col-md-4" [ngClass]="{'error': isErroneous(signupForm, 'firstName', 'name')}">
+          <label class="field-label required" for="firstName"> First Name </label>
+          <input class="form-control" placeholder="First Name" id="firstName" name="firstName" formControlName="firstName"/>
+        </div>
+        <div class="form-group col-md-4" [ngClass]="{'error': isErroneous(signupForm, 'middleName', 'name')}">
+          <label class="field-label" for="middleName"> Middle Name </label>
+          <input class="form-control" placeholder="Middle Name" id="middleName" name="middleName" formControlName="middleName"/>
+        </div>
+        <div class="form-group col-md-4" [ngClass]="{'error': isErroneous(signupForm, 'lastName', 'name')}">
+          <label class="field-label required" for="lastName"> Last Name </label>
+          <input class="form-control" placeholder="Last Name" id="lastName" name="lastName" formControlName="lastName"/>
+        </div>
+      </div>
+      
+      <div class="form-group" [ngClass]="{'error': isErroneous(signupForm, 'phone')}">
+        <label class="field-label required" for="phone"> Phone Number </label>
+        <input class="form-control"  type="tel" placeholder="Phone Number" id="phone" name="phone" formControlName="phone"/>
+      </div>
+      <div class="form-group" [ngClass]="{'error': isErroneous(signupForm, 'email')}">
+        <label class="field-label required" for="email"> Email </label>
+        <input class="form-control" type="email" placeholder="abc@def.com" id="email" name="email" formControlName="email"/>
+      </div>
+      <div class="form-group" [ngClass]="{'error': isErroneous(signupForm, 'password')}">
+        <label class="field-label required" for="password"> Password </label>
+        <input class="form-control" placeholder="xxxxxx" id="password" name="password" type="password" formControlName="password"  (change)="test()"/>
+      </div>
+  
+      <div class="form-action-section col-12 text-right">
+        <input type="submit" value="Signup" class="btn btn-primary q-btn" [disabled]="signupForm.invalid"/>
+      </div>
+      
+      <div class="info-footer">
+        <p class="info-message-mandatory text-right">* Mandatory Fields</p>
+      </div>
+    </form>
+    <div class="login-section">
+      <p class="no-margin"><a routerLink = "/auth/login">Login Here</a></p>
+    </div>
+</div>
