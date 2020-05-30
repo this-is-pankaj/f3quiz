@@ -14,36 +14,66 @@ export class AdminConsoleComponent implements OnInit {
     
   }
 
-  startGame() {
-    if(this.quizService.isGameOn){
-      alert('start')
+  showQuestion() {
+    if(this.quizService.activateButtons()){
+      alert('The Question is')
+    }
+  }
+
+  showOptions () {
+    if(this.quizService.activateButtons()){
+      alert('Options are')
+    }
+  }
+
+  startTimer () {
+    if(this.quizService.activateButtons()){
+      alert('Your time  starts  now')
+    }
+  }
+
+  showAnswer() {
+    if(this.quizService.activateButtons()){
+      alert('The correct answer is')
+    }
+  }
+
+  showResult() {
+    if(this.quizService.activateButtons()){
+      alert('These  people gave the right answers')
+    }
+  }
+
+  endGame() {
+    if(this.quizService.activateButtons()){
+      alert('Thank you  for playing. Till we meet again.')
     }
   }
 
   consoleButtons = [
     {
-      text: "show options",
-      click: this.startGame.bind(this)
+      text: "show question",
+      click: this.showQuestion.bind(this)
     },
     {
-      text: "next question",
-      click: this.startGame
+      text: "show options",
+      click: this.showOptions.bind(this)
     },
     {
       text: "start timer",
-      click: this.startGame
+      click: this.startTimer.bind(this)
     },
     {
       text: "show answer",
-      click: this.startGame
+      click: this.showAnswer.bind(this)
     },
     {
       text: "show result",
-      click: this.startGame
+      click: this.showResult.bind(this)
     },
     {
       text: "end game",
-      click: this.startGame
+      click: this.endGame.bind(this)
     }
   ];
 }

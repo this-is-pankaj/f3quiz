@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./my-groups.component.scss']
 })
 export class MyGroupsComponent implements OnInit {
-  groupsList$: Observable<[Group]>;
+  groupsList$: [Group];
   constructor(
     private groupService:  GroupsService,
     private router: Router
