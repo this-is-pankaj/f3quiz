@@ -12,7 +12,7 @@ const component = 'index';
 mongoose.Promise = global.Promise;
 console.log(config.connectionString);
 const options = {
-	useMongoClient: true,
+	useNewUrlParser: true,
 	// autoIndex: false, // Don't build indexes
 	reconnectTries: 100, // Never stop trying to reconnect
 	reconnectInterval: 500, // Reconnect every 500ms
