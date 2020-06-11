@@ -5,7 +5,6 @@ const collectionName = 'rooms',
   LOG = require('../utils/logger'),
   utils =  require('../utils/utils'),
   component = 'rooms.controller',
-  roomsCollection = mongoose.model(collectionName);
   methods = {};
 
 methods.createRoom = (req, res) => {
@@ -39,7 +38,7 @@ methods.getRooms = async (req, res)=>{
     let q={
       owner: req.userId
     };
-    let resp  = await roomsCollection.find(q)
+    let resp  = await roomsModel.find(q)
       .catch((err)=>{
         LOG.error(`${component}.getRooms.find`, reqId, err);
         utils.handleResponse(res, 500, err, resp);
@@ -57,7 +56,7 @@ methods.getRooms = async (req, res)=>{
 methods.getActiveGames = async (req, res)=>{
   const reqId = req.reqId;
   try{
-    let resp  = await roomsCollection.find({})
+    let resp  = await roomsModel.find({})
       .catch((err)=>{
         LOG.error(`${component}.getRooms.find`, reqId, err);
         utils.handleResponse(res, 500, err, resp);
