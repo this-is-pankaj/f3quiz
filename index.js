@@ -10,6 +10,7 @@ const express = require('express'),
 const component = 'index';
 
 mongoose.Promise = global.Promise;
+console.log(config.connectionString);
 mongoose.connect(config.connectionString)
   .then(() => {
     LOG.info(`${component}.mongoose`, 'defaultId', 'Database is connected');
