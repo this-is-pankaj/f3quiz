@@ -10,6 +10,10 @@ body {
   }
 }
 
+.hide {
+  display: none;
+}
+
 .required {
   &::after {
     content: "*";

@@ -4,7 +4,7 @@ const express = require('express'),
 	bodyParser = require('body-parser'),
 	cors = require('cors'),
 	mongoose = require('mongoose'),
-  config = require(`./server/config/${process.env.NodeEnv||'local'}`),
+  config = require(`./server/config/${process.env.NODE_ENV||'local'}`),
   LOG = require('./server/utils/logger');
 
 const component = 'index';

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { UserService } from '../../../shared/services/user/user.service';
+import { Subject, Observable } from '../../../../../../../node_modules/rxjs';
+import { Question } from '../../interfaces/question';
+import { Timer } from '../../interfaces/timer';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +15,105 @@ export class QuizService {
     grp: '',
     gameId:  ''
   };
+  private points = new Subject<Number>();
+
+  private question = new Subject<Question>();
+
+  private options = new Subject();
+
+  private timer = new Subject<Timer>();
+
+  private roundResult = new Subject();
+
+  private scoreBoard = new Subject();
 
   private isGameOn: Boolean =false; // This flag is used  to ensure that the admin console and user butttons are enabled only if the game is successfully created/ if the user is valid,i.e, not been disqualiified.
 
+  private showResultPopUp: Boolean = false;
+
+  private submitBtnActive:  Boolean = false;
+
+  private showFastest: Boolean = false;
+
+  private setPoints(points) {
+    this.points.next(points);
+  }
+
+  public getPoints() {
+    return this.points.asObservable();
+  }
+
   activateButtons () {
     return this.isGameOn;
+  }
+
+  public isSubmitButtonActive() {
+    return this.submitBtnActive;
+  }
+
+  private setSubmitBtnState(state) {
+    this.submitBtnActive = state;
+  }
+
+  public getQuestion():Observable<any> {
+    return this.question.asObservable();
+  }
+
+  private setQuestion(ques) {
+    if(ques.text)
+      this.question.next(ques);
+  }
+
+  public getOptionsToBeDisplayed(): Observable<any>{
+    return this.options.asObservable();
+  }
+
+  private setOptions(options) {
+    if(options){
+      this.options.next(options);
+    }
+  }
+
+  public getTimer() {
+    return this.timer.asObservable();
+  }
+
+  private setTimer(val){
+    if(val>-1){
+      this.timer.next({text:val});
+    }
+
+    if(!val) {
+      this.setSubmitBtnState(false);
+    }
+  }
+
+  public getRoundResult():Observable<any> {
+    return this.roundResult.asObservable();
+  }
+
+  private setRoundResult(res) {
+    this.roundResult.next(res);
+  }
+
+  public shouldShowResultPopup() {
+    return this.showResultPopUp;
+  }
+
+  private setResultPopUpState(state) {
+    this.showResultPopUp  = state;
+  }
+
+  private setShowFastestFlag(flag) {
+    if(flag) {
+      // If the fastestt is being shown, that means, we need to save the points  for the user as well.
+      this.socket.emit('addPointsForRoundWinner', this.userInfo);
+    }
+    this.showFastest = flag;
+  }
+
+  public shouldShowWinner() {
+    return this.showFastest;
   }
 
   constructor(
@@ -49,9 +146,46 @@ export class QuizService {
     this.socket.emit('startRound', this.userInfo);
   }
 
+  public closeGame() {
+    this.socket.emit('endRound', this.userInfo);
+  }
+
   public setGameId(id) {
     if(id)
       this.userInfo.gameId = id;
+  }
+
+  public getNextQuestion() {
+    this.socket.emit('getNextQues', this.userInfo);
+  }
+
+  public getOptions() {
+    this.socket.emit('getOptions',  this.userInfo);
+  }
+
+  public showAnswer() {
+    this.socket.emit('getAnswer', this.userInfo);
+  }
+
+  public showRoundWinner() {
+    this.socket.emit('getWinner', this.userInfo);
+  }
+
+  public getFastestUser() {
+    this.socket.emit('getFastestAnswer', this.userInfo);
+  }
+
+  public showScoreBoard() {
+    this.socket.emit('getScores', this.userInfo);
+  }
+
+  public submitAnswer(answer) {
+    this.setSubmitBtnState(false);
+    this.socket.emit('submitAnswer',  {info: this.userInfo, myAnswer: answer});
+  }
+
+  public changeResultPopUpState(state) {
+    this.socket.emit('changeResultPopUpState', {info: this.userInfo, state});
   }
 
   /**
@@ -62,14 +196,84 @@ export class QuizService {
    */
   private recepients () {
     this.socket.on('gameCreated', (msg)=>{
-      console.log(msg);
       this.isGameOn = msg.success;
       this.setGameId(msg.gameId);
     });
 
     this.socket.on('Connected', (msg)=>{
+      console.log('User connecteed');
+    });
+
+    this.socket.on('question', (msg)=>{
+      if(msg.success) {
+        //Set the question to the new one received.
+        this.setQuestion(msg.ques);
+        this.setOptions([]);
+        this.setSubmitBtnState(false);  //  Disable the button on new  question  arrival
+      }
+      else{
+        console.log(`Unable to get questions`);
+      }
+    });
+
+    this.socket.on('options', (msg)=>{
+      if(msg.success) {
+        //Set the options to the new one received.
+        this.setOptions(msg.options);
+        this.setTimer(msg.timer);
+        this.setSubmitBtnState(true);
+      }
+      else{
+        console.log(`Unable to get options`);
+      }
+    });
+
+    this.socket.on('setTimer', (msg)=>{
+      if(msg.success) {
+        //Set the question to the new one received.
+        this.setTimer(msg.timer);
+      }
+      else{
+        console.log(`Unable to set Timer`);
+      }
+    });
+
+    this.socket.on('submittedAnswer', (msg)=>{
+      // Set the submitBtnState to active, in case submission failed
+      this.setSubmitBtnState(!msg.success);
+    });
+
+    this.socket.on('displayAnswer', (msg)=>{
+      this.setOptions(msg.correctAns.answer);
+    });
+
+    this.socket.on('displayRoundResult', (msg)=>{
+      if(msg.success) {
+        this.setRoundResult(msg.result);
+        this.setShowFastestFlag(false);
+        this.setResultPopUpState(true);
+      }
+    });
+
+    this.socket.on('displayResultPopup', (msg)=>{
+      this.setShowFastestFlag(false); // Set it  to false when closing the popup
+      this.setResultPopUpState(msg);
+    });
+
+    this.socket.on('showFastest', (msg)=>{
+      this.setShowFastestFlag(true);
+    });
+
+    this.socket.on('updatePoints', (msg)=>{
       console.log(msg);
-      alert(1);
+      this.setPoints(msg.points);
+    })
+
+    this.socket.on('gameOver', (msg)=>{
+      console.log(msg);
+      if(msg.success) {
+        alert('Disconnected')
+      }
     })
   }
 }

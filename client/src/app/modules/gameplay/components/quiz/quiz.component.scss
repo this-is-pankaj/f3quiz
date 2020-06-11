@@ -28,6 +28,19 @@
     font-size: 18px;
     word-spacing: 5px;
     letter-spacing: 1px;
+    display: flex;
+
+    .question-num  {
+      margin-right: 15px;
+
+      &::after {
+        content: ".";
+      }
+    }
+
+    .question-text {
+
+    }
   }
 
   .options-wrapper {
@@ -54,6 +67,14 @@
       &.selected {
         background: #c2a2cd;
         font-weight: bold;
+      }
+
+      &.correct {
+        background: #4dfaa2;
+
+        * {
+          color: #000;
+        }
       }
     }
   }

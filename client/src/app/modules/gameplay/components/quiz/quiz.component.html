@@ -1,22 +1,25 @@
 <div class="quiz">
-  <div class="solo-timer">
-    <p class="no-margin solo-timer-text text-center">30s</p>
+  <div class="solo-timer" *ngIf="timer['text']">
+    <p class="no-margin solo-timer-text text-center">{{timer['text']}}s</p>
   </div>
-  <div class="question-wrapper">
-    <p class="question-text no-margin">{{question.question}}</p>
-  </div>
-  <div class="options-wrapper row">
-    <div *ngFor="let opt of question.options; let i=index;" [ngClass]="{ option: true, 'col-md-6': true, selected: isClicked(opt.value)}" (click)="choose(opt.value)">
-      <p class="option-num no-margin">{{i}}</p>
-      <p class="option-text no-margin">{{opt.text}}</p>
+  <div class="ques-opt-wrapper" *ngIf="question.text">
+    <div class="question-wrapper">
+      <p class="question-num no-margin">{{question.num}}</p>
+      <p class="question-text no-margin">{{question.text}}</p>
     </div>
-  </div>
-  <div class="action-wrapper">
-    <div class="actions" *ngIf="!isAdminConsole">
-      <button class="btn btn-primary q-btn">Submit</button>
+    <div class="options-wrapper row">
+      <div *ngFor="let opt of options; let i=index;" [ngClass]="{ option: true, 'col-md-6': true, selected: isClicked(opt.value), correct: appStatic.optionText[opt.num]}" (click)="choose(opt.value)">
+        <p class="option-num no-margin">{{appStatic.optionText[opt.num] || appStatic.optionText[i]}}</p>
+        <p class="option-text no-margin">{{opt.text}}</p>
+      </div>
     </div>
-    <div class="timer">
-      <p class="no-margin timer-text text-center">30s</p>
+    <div class="action-wrapper">
+      <div class="actions" *ngIf="showSubmit()">
+        <button class="btn btn-primary q-btn" (click)="submitAns()">Submit</button>
+      </div>
+      <div class="timer" *ngIf="timer['text']">
+        <p class="no-margin timer-text text-center">{{timer['text']}}s</p>
+      </div>
     </div>
   </div>
 </div>

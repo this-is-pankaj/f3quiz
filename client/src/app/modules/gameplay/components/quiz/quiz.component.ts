@@ -1,4 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { QuizService } from '../../services/quiz/quiz.service';
+import { Observable, Subscription } from 'rxjs';
+import { Question } from '../../interfaces/question';
+import { AppStatic } from '../../../../_helper/appStatic.constant';
 
 @Component({
   selector: 'app-quiz',
@@ -7,54 +11,62 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class QuizComponent implements OnInit {
   @Input('admin') isAdminConsole: Boolean;
-  question = {
-    "createdBy": "admin",
-    "_id": "5ec68048c9962197d39e658a",
-    "forGroup": "qbank",
-    "level": 1,
-    "options": [
-        {
-            "_id": "5ec68048c9962197d39e658b",
-            "text": "G",
-            "value": "g"
-        },
-        {
-            "_id": "5ec68048c9962197d39e658c",
-            "text": "J",
-            "value": "j"
-        },
-        {
-            "_id": "5ec68048c9962197d39e658d",
-            "text": "U",
-            "value": "u"
-        },
-        {
-            "_id": "5ec68048c9962197d39e658e",
-            "text": "V",
-            "value": "v"
-        },
-        {
-            "_id": "5ec68048c9962197d39e658f",
-            "text": "W",
-            "value": "w"
-        },
-        {
-            "_id": "5ec68048c9962197d39e6590",
-            "text": "X",
-            "value": "x"
-        }
-    ],
-    "question": "Arrange these English alphabets in order",
-    "type": "f3",
-    "createdAt": "2020-05-21T13:21:12.025Z",
-    "__v": 0
-  }
-
+  question: Question = this.setDefaultQuesObj();
+  questionSub:  Subscription;
+  options = [];
+  optionsSub: Subscription;
+  timer = {};
+  timerSub: Subscription;
+  
+  appStatic = AppStatic;
   answer = [];
-  constructor() { }
+
+  private setDefaultQuesObj () {
+    return {
+      num: 0,
+      level: undefined,
+      submittedBy: undefined,
+      text: undefined
+    }
+  }
+  constructor(
+    private quizService: QuizService
+  ) { 
+    // Subscribe to Question
+    this.questionSub = this.quizService.getQuestion()
+      .subscribe((q)=>{
+        if(q && q.text) {
+          this.question = q;
+        }
+        else {
+          this.question = this.setDefaultQuesObj();
+        }
+        this.answer=[];
+      });
+
+    // Subscribe to  options
+    this.optionsSub  = this.quizService.getOptionsToBeDisplayed()
+      .subscribe((o)=>{
+        if(o && o.length)  {
+          this.options = o;
+        }
+        else{
+          this.options  =  [];
+        }
+      })
+      
+    this.timerSub = this.quizService.getTimer()
+      .subscribe((t)=>{
+        this.timer =  t;
+      })
+  }
 
   ngOnInit() {
 
+  }
+
+  showSubmit() {
+    return !this.isAdminConsole && this.quizService.isSubmitButtonActive();
   }
   
   choose(opt) {
@@ -71,5 +83,18 @@ export class QuizComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  submitAns() {
+    if(this.quizService.isSubmitButtonActive()){
+      this.quizService.submitAnswer(this.answer);
+    }
+  }
+
+  ngOnDestroy() {
+    // unsubscribe to ensure no memory leaks
+    this.questionSub.unsubscribe();
+    this.optionsSub.unsubscribe();
+    this.timerSub.unsubscribe();
   }
 }

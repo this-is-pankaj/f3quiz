@@ -1,0 +1,65 @@
+.results {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #000;
+
+  .results-container  {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+
+    .admin-console {
+      .q-btn {
+        margin: 0 20px;
+      }
+    }
+
+    .results-wrapper {
+      .result {
+        border: 1px solid;
+        padding: 15px;
+        display: flex;
+  
+        &.incorrect {
+          background: #f20707;
+        }
+  
+        &.correct  {
+          background: #0e8000;
+        }
+  
+        &.winner  {
+          animation-name: blink;
+          animation-duration: 0.5s;
+          animation-iteration-count: infinite;
+        }
+
+        .participant-name  {
+          width: calc(100% - 200px);
+        }
+  
+        .time-taken  {
+          width: 100px;
+        }
+  
+        .coins {
+          width: 100px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes blink {
+  0%{
+    background: linear-gradient(45deg, #0e8000, #5bc44f);
+  }
+  100%{
+    background: linear-gradient(45deg, #5bc44f, #0e8000);
+  }
+}

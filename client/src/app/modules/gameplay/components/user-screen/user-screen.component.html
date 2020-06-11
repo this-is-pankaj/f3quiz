@@ -1,3 +1,10 @@
 <div class="user-screen">
-  <app-quiz></app-quiz>
+  <div class="user-options">
+    <p class="score no-margin">
+      <i class="fa fa-snowflake-o" aria-hidden="true"></i>
+      <span class="score-text">{{points}}</span>
+    </p>
+  </div>
+  <app-quiz [admin]="false"></app-quiz>
+  <app-results></app-results>
 </div>

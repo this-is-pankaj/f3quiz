@@ -24,6 +24,9 @@ let quesSchema = {
   "forGroup": {
     type: String,
     required: true
+  },
+  "reference": {
+    type: String
   }
 }
 

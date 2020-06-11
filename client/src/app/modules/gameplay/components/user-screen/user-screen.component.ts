@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QuizService } from '../../services/quiz/quiz.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-screen',
@@ -8,7 +9,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./user-screen.component.scss']
 })
 export class UserScreenComponent implements OnInit {
-
+  pointSub: Subscription;
+  points:Number = 0;
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService
@@ -18,6 +20,11 @@ export class UserScreenComponent implements OnInit {
         quizService.setGrpId(params.grpId);
         quizService.setGameId(params.gameId);
       });
+
+    this.pointSub = quizService.getPoints()
+      .subscribe((p)=>{
+        this.points = p;
+      })
   }
 
   ngOnInit() {
@@ -26,6 +33,10 @@ export class UserScreenComponent implements OnInit {
 
   initialize(){
     this.quizService.userConnected();
+  }
+
+  getPoints() {
+    return this.quizService.getPoints();
   }
 
 }

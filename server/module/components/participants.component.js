@@ -7,7 +7,8 @@ methods.generateParticipant = (userInfo, gameId, roomId, uid)=>{
     "email": userInfo.email,
     "points": 0,
     "attemptedQues": [],
-    "uid": uid
+    "uid": uid,
+    "isConnected": true
   };
   // Add the participant to the game in the background.
   roomsManager.addParticipantToGame(userInfo, gameId, roomId)

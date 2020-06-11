@@ -1,0 +1,18 @@
+.user-screen {
+  .user-options {
+    display: flex;
+    justify-content: flex-end;
+    
+    .score {
+      font-size: 20px;
+
+      *{
+        color: #ffd700;
+      }
+
+      .score-text {
+        margin-left: 5px;
+      }
+    }
+  }
+}

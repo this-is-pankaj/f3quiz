@@ -16,37 +16,43 @@ export class AdminConsoleComponent implements OnInit {
 
   showQuestion() {
     if(this.quizService.activateButtons()){
-      alert('The Question is')
+      this.quizService.getNextQuestion();
     }
   }
 
   showOptions () {
     if(this.quizService.activateButtons()){
-      alert('Options are')
+      this.quizService.getOptions();
     }
   }
 
   startTimer () {
     if(this.quizService.activateButtons()){
-      alert('Your time  starts  now')
+      this.quizService.getTimer();
     }
   }
 
   showAnswer() {
     if(this.quizService.activateButtons()){
-      alert('The correct answer is')
+      this.quizService.showAnswer();
+    }
+  }
+  
+  showResult() {
+    if(this.quizService.activateButtons()){
+      this.quizService.showRoundWinner();
     }
   }
 
-  showResult() {
-    if(this.quizService.activateButtons()){
-      alert('These  people gave the right answers')
+  showScores() {
+    if(this.quizService.activateButtons()) {
+      this.quizService.showScoreBoard();
     }
   }
 
   endGame() {
     if(this.quizService.activateButtons()){
-      alert('Thank you  for playing. Till we meet again.')
+      this.quizService.closeGame();
     }
   }
 
@@ -70,6 +76,10 @@ export class AdminConsoleComponent implements OnInit {
     {
       text: "show result",
       click: this.showResult.bind(this)
+    },
+    {
+      text: "Show Scoreboard",
+      click: this.showScores.bind(this)
     },
     {
       text: "end game",

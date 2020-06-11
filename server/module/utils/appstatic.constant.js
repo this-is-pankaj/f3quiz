@@ -18,7 +18,8 @@ const _Constants = {
         numOfQuestion: 3,
         level: 4
       }
-    }
+    },
+    timePerQues: 30
   },
   collections: {
     user: "users",

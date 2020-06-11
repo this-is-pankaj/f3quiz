@@ -124,4 +124,35 @@ methods.addParticipantToGame = (participant, gameId, roomId)=>{
     }
   })
 }
+
+methods.endGame = (roomId, gameId)=>{
+  return new Promise((resolve, reject)=>{
+    try{
+      // Find the Room
+      findRoomId(roomId)
+        .then((doc)=>{
+          //  Find the Game and chec if its active
+          let games = doc.games;
+          let game = games.filter((g)=>{
+            return (g._id.toString() ==  gameId);
+          });
+          // Add the participant to the list
+          if(game && game.length) {
+            game[0].isActive = false;
+            game[0].allowNewJoins = false;
+          }
+          doc.save()
+            .then((data)=>{
+              resolve(data);
+            })
+            .catch((err)=>{
+              reject(err);
+            })
+        })
+    }
+    catch(exc){
+      reject(exc);
+    }
+  })
+}
 module.exports  = methods;

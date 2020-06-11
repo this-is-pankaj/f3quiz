@@ -1,0 +1,18 @@
+<div class="results" *ngIf="shouldDisplay()">
+  <div class="results-container">
+    <div class="results-title">
+      <h4>Round Results</h4>
+    </div>
+    <div class="admin-console text-center" *ngIf="isAdminConsole">
+      <button class="q-btn" (click)="showFastestUser()">Fastest</button>
+      <button  class="q-btn" (click)="closePopup()">Close</button>
+    </div>
+    <div class="results-wrapper">
+      <div [ngClass]="{'result': true, correct: res.status==='correct', incorrect: res.status==='incorrect', winner: isWinner(res)}" *ngFor="let res of roundResult">
+        <p class="participant-name no-margin">{{res.name}}</p>
+        <p class="time-taken text-center no-margin" *ngIf="res.time">+{{res.time}}s</p>
+        <!-- <p class="coins text-center no-margin">+1000</p> -->
+      </div>
+    </div>
+  </div>
+</div>
