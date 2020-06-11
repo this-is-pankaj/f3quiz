@@ -10,7 +10,7 @@ const express = require('express'),
 const component = 'index';
 
 mongoose.Promise = global.Promise;
-console.log(config.connectionString);
+
 const options = {
 	useNewUrlParser: true,
 	// autoIndex: false, // Don't build indexes
