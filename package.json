@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --prod && node index",
+    "start": "ng build --prod node index.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -13,6 +13,8 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.1.2",
+    "@angular/cli": "~8.1.2",
+    "@angular/compiler-cli": "~8.1.2",
     "@angular/common": "~8.1.2",
     "@angular/compiler": "~8.1.2",
     "@angular/core": "~8.1.2",
@@ -35,8 +37,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.801.2",
-    "@angular/cli": "~8.1.2",
-    "@angular/compiler-cli": "~8.1.2",
     "@angular/language-service": "~8.1.2",
     "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
