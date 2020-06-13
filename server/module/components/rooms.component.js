@@ -56,7 +56,7 @@ methods.createGameInRoom = (id, adminId) => {
         _id : id
       };
         
-      RoomSchema.findOne(q).lean().exec(function(err, doc){
+      RoomSchema.findOne(q).exec(function(err, doc){
         console.log(doc);
         let activeGame = getActiveGame(doc);
         if(activeGame) {

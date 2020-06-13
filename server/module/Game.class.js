@@ -17,7 +17,7 @@ class Game {
         .then((res)=>{
           this.admin = res[0];
           this.roomDetails = res[1];
-          this.gameId = this.roomDetails.games[this.roomDetails.games.length - 1]._id;
+          this.gameId = this.roomDetails.games[this.roomDetails.games.length - 1]._id.toString();
           resolve(true);
         })
         .catch((err)=>{
