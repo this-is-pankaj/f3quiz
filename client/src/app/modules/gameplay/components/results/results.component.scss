@@ -8,10 +8,14 @@
 
   .results-container  {
     position: absolute;
-    top: 15%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
+
+    .results-title {
+      margin-bottom: 30px;
+    }
 
     .admin-console {
       .q-btn {

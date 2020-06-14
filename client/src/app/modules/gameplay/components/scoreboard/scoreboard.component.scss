@@ -8,13 +8,13 @@
 
   .scoreboard-container  {
     position: absolute;
-    top: 15%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
 
     .scoreboard-title {
-
+      margin-bottom: 30px;
     }
 
     .admin-console {

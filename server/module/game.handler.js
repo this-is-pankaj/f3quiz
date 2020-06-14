@@ -487,8 +487,8 @@ let calculatePoints = (qInfo) => {
     let numOfPlayers = players.length,
       numOfAnswers = answers.length;
 
-  if(qInfo.roundResult && qInfo.roundResult.length) {
-    let wrongAnswers = qInfo.roundResult.filter((r)=>{
+  if(qInfo.currentQues.roundResult && qInfo.currentQues.roundResult.length) {
+    let wrongAnswers = qInfo.currentQues.roundResult.filter((r)=>{
       return r.status==='incorrect';
     });
     numOfWrongAns = wrongAnswers.length;
