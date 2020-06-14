@@ -21,4 +21,16 @@ methods.generateParticipant = (userInfo, gameId, roomId, uid)=>{
   return participant;
 }
 
+methods.updateParticipantRoundInfo = (roundInfo, gameId, roomId)=>{
+  let participants = roundInfo;
+
+  roomsManager.udpateRoundInfo(roomId, gameId, participants)
+    .then((doc)=>{
+      console.log(`Participants  status updated for  the Game ${gameId}`);
+    })
+    .catch((err)=>{
+      console.log(`Failed to update DB with the participant in game ${gameId}. Reason ${err}`);
+    })
+}
+
 module.exports = methods;

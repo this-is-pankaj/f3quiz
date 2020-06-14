@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { UserService } from '../../../shared/services/user/user.service';
-import { Subject, Observable } from '../../../../../../../node_modules/rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Question } from '../../interfaces/question';
 import { Timer } from '../../interfaces/timer';
+import { Router } from '@angular/router';
+import { AppStatic } from '../../../../_helper/appStatic.constant';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +18,8 @@ export class QuizService {
     grp: '',
     gameId:  ''
   };
+
+  private appStatic = AppStatic;
   private points = new Subject<Number>();
 
   private question = new Subject<Question>();
@@ -30,6 +35,8 @@ export class QuizService {
   private isGameOn: Boolean =false; // This flag is used  to ensure that the admin console and user butttons are enabled only if the game is successfully created/ if the user is valid,i.e, not been disqualiified.
 
   private showResultPopUp: Boolean = false;
+
+  private showScoreBoardPopUp: Boolean = false;
 
   private submitBtnActive:  Boolean = false;
 
@@ -92,16 +99,32 @@ export class QuizService {
     return this.roundResult.asObservable();
   }
 
+  public getScoreBoard():Observable<any> {
+    return this.scoreBoard.asObservable();
+  }
+
   private setRoundResult(res) {
     this.roundResult.next(res);
+  }
+
+  private setScoreBoard(res) {
+    this.scoreBoard.next(res);
   }
 
   public shouldShowResultPopup() {
     return this.showResultPopUp;
   }
 
+  public shouldShowScoreBoardPopup() {
+    return this.showScoreBoardPopUp;
+  }
+
   private setResultPopUpState(state) {
     this.showResultPopUp  = state;
+  }
+
+  private setScoreBoardPopUpState(state) {
+    this.showScoreBoardPopUp = state;
   }
 
   private setShowFastestFlag(flag) {
@@ -118,7 +141,8 @@ export class QuizService {
 
   constructor(
     private userService: UserService,
-    private socket: Socket
+    private socket: Socket,
+    private router: Router
   ) { 
     this.recepients();
   }
@@ -184,8 +208,11 @@ export class QuizService {
     this.socket.emit('submitAnswer',  {info: this.userInfo, myAnswer: answer});
   }
 
-  public changeResultPopUpState(state) {
-    this.socket.emit('changeResultPopUpState', {info: this.userInfo, state});
+  public changePopUpState(state, popupType) {
+    if(popupType === 'results')
+      this.socket.emit('changeResultPopUpState', {info: this.userInfo, state});
+    else if(popupType === 'scoreBoard')
+      this.socket.emit('changeScoreBoardPopUpState', {info: this.userInfo, state});
   }
 
   /**
@@ -201,7 +228,10 @@ export class QuizService {
     });
 
     this.socket.on('Connected', (msg)=>{
-      console.log('User connecteed');
+      if(!msg.success){
+        alert(msg.message);
+        this.router.navigate([this.appStatic.defaultRoutes[this.userInfo.role].dashboard]);
+      }
     });
 
     this.socket.on('question', (msg)=>{
@@ -260,20 +290,38 @@ export class QuizService {
       this.setResultPopUpState(msg);
     });
 
+    this.socket.on('displayScoreBoardPopup', (msg)=>{
+      this.setScoreBoardPopUpState(msg);
+    });
+
     this.socket.on('showFastest', (msg)=>{
       this.setShowFastestFlag(true);
     });
 
-    this.socket.on('updatePoints', (msg)=>{
+    this.socket.on('updatePoints', (msg)=>{ 
       console.log(msg);
       this.setPoints(msg.points);
+    });
+
+    this.socket.on('showScoreBoard', (msg)=>{
+      console.log(msg);
+      this.setScoreBoard(msg.participants);
+      this.setScoreBoardPopUpState(true);
     })
 
     this.socket.on('gameOver', (msg)=>{
       console.log(msg);
       if(msg.success) {
-        alert('Disconnected')
+        alert('Gaame Over.. Closing Room!');
+        // navigate the user to the dashboard.
+        this.router.navigate([this.appStatic.defaultRoutes[this.userInfo.role].dashboard]);
       }
-    })
+    });
+
+    this.socket.on('disconnect', ()=>{
+      alert('You are disconnected.. refresh to continue!');
+      window.location.reload();
+      // $(".support").removeClass("hide");
+    });
   }
 }

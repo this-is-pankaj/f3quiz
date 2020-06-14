@@ -38,7 +38,7 @@ export class ResultsComponent implements OnInit {
   }
 
   closePopup(){
-    this.quizService.changeResultPopUpState(false);
+    this.quizService.changePopUpState(false, 'results');
   }
   
   isWinner(res) {

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./my-groups.component.scss']
 })
 export class MyGroupsComponent implements OnInit {
-  groupsList$: [Group];
+  groupsList$: Group[] = [];
   constructor(
     private groupService:  GroupsService,
     private router: Router
@@ -20,12 +20,25 @@ export class MyGroupsComponent implements OnInit {
     this.initialize();
   }
 
+  private setDefaultGrpObj () {
+    return {
+      id: undefined,
+      isActive: false,
+      name: undefined,
+      owner: undefined,
+      games: []
+    }
+  }
+
   initialize() {
     let that = this;
     that.groupService.fetchGroups()
       .subscribe((groups)=>{
         if(groups['status']  === 200){
           that.groupsList$  = groups['data'];
+        }
+        else{
+          that.groupsList$  = [];
         }
       })
   }

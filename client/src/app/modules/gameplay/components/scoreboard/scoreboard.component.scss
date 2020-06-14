@@ -1,0 +1,65 @@
+.scoreboard {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #000;
+
+  .scoreboard-container  {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+
+    .scoreboard-title {
+
+    }
+
+    .admin-console {
+      .q-btn {
+        margin: 0 20px;
+      }
+    }
+
+    .scoreboard-wrapper {
+      .result {
+        box-shadow: 0 0 5px 1px #ed51ed;
+        border-bottom: 1px solid #ed51ed;
+        padding: 15px;
+        display: flex;
+
+        .sl-no {
+          width: 50px;
+
+          &.rank-1 *{
+            color: #ffd700;
+          }
+        }
+
+        .participant-name  {
+          width: calc(100% - 200px);
+        }
+  
+        .points {
+          width: 100px;
+          color: #ffd700;
+
+          *{
+            color: #ffd700;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes blink {
+  0%{
+    background: linear-gradient(45deg, #0e8000, #5bc44f);
+  }
+  100%{
+    background: linear-gradient(45deg, #5bc44f, #0e8000);
+  }
+}

@@ -54,7 +54,7 @@ module.exports = (app)=>{
           })
 
         if(endGame) {
-          io.in(res.gameId).emit('gameOver', {success: true, gameId: endGame});
+          io.in(endGame.gameId).emit('gameOver', {success: true, gameId: endGame});
         }
     })
 
@@ -79,8 +79,12 @@ module.exports = (app)=>{
           if(res.currentQues.displayedOptions && res.currentQues.displayedOptions.length){
             socket.emit('options', {success: true, options: res.currentQues.displayedOptions});
             socket.emit('setTimer', {success: true, timer: res.currentQues.timer});
+            socket.emit('updatePoints', res.participants[info.userId])
           }
         }
+      }
+      else{
+        socket.emit('Connected', {success: false, message: "The Game is not active yet or has been closed. Check back later.."});
       }
     });
 
@@ -149,6 +153,12 @@ module.exports = (app)=>{
       io.in(gameInfo.gameId).emit('displayResultPopup', msg.state);
     });
 
+    socket.on('changeScoreBoardPopUpState', (msg)=>{
+      let info = transformInfo(msg.info),
+        gameInfo = handler.getGameInfo(info.roomId);
+      io.in(gameInfo.gameId).emit('displayScoreBoardPopup', msg.state);
+    });
+
     socket.on('getParticipants', (msg)=>{
       let info = transformInfo(msg),
         participants = handler.getParticipants(info.roomId);
@@ -167,16 +177,26 @@ module.exports = (app)=>{
     socket.on('addPointsForRoundWinner', (msg)=>{
       let info  = transformInfo(msg),
         assignPoints = handler.assignPoints(info.roomId);
-        console.log(assignPoints);
       // If gameId exiists, means the game was found and we can emit the points.
       if(assignPoints.gameId && assignPoints.winner && assignPoints.winner.uid) {
         socket.broadcast.to(assignPoints.winner.uid).emit('updatePoints', assignPoints.winner);
       }
+    });
+
+    socket.on('getScores', (msg)=>{
+      let info  = transformInfo(msg),
+        participants = handler.getParticipants(info.roomId);
+
+      // sort the partiicipants in order of their scores:
+      participants.participants.sort((a,b)=>{
+        return b.points - a.points;
+      });
+      io.in(participants.gameId).emit('showScoreBoard', {success: true, participants: participants.participants});  
     })
 
     // socket.on('start game', () => gameManager.start());
     socket.on('disconnect',  (reason)=>{
-      console.log('user discoinnected', reason)
+      console.log('user discoinnected', reason);
     })
   })
 }

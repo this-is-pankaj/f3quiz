@@ -192,7 +192,7 @@ methods.addParticipant = (info)=>{
         // let alreadyPlaying = participants.filter((player)=>{
         //   return (info.userId  == player._id) && !player.isDropped;
         // });
-        if(alreadyPlaying && !alreadyPlaying.isConnected){
+        if(alreadyPlaying){
           alreadyPlaying.isConnected = true;
           alreadyPlaying.uid = info.uid;
         }
@@ -225,14 +225,17 @@ methods.addParticipant = (info)=>{
 methods.close = (info) => {
   return new Promise(async(resolve, reject)=>{
     try{
-      let endRes = await roomHandler.endGame(info.roomId, info.gameId)
-        .catch((err)=>{
-          reject(err);
-        })
+      let gameInfo = gameStats[info.roomId];
+      if(gameInfo){
+        let endRes = await roomHandler.endGame(info.roomId,gameInfo.gameId)
+          .catch((err)=>{
+            reject(err);
+          })
 
-      if(endRes) {
-        gameStats[info.roomId].status =0;
-        resolve(gameStats[info.roomId]);
+        if(endRes) {
+          gameStats[info.roomId].status =0;
+          resolve(gameStats[info.roomId]);
+        }
       }
     }
     catch(exc) {
@@ -342,11 +345,14 @@ methods.submitAnswer =  (roomId, userId, answer)  => {
     if(!currQues.answers){
       currQues.answers= {};
     }
-    currQues.answers[userId] = {
-      answer,
-      time: Date.now()
-    };
-    return true;
+    if(!currQues.answers[userId]){
+      currQues.answers[userId] = {
+        answer,
+        time: Date.now()
+      };
+      return true;
+    }
+    console.log("Already answered once");
   }
   return false;
 }
@@ -487,6 +493,7 @@ let calculatePoints = (qInfo) => {
     });
     numOfWrongAns = wrongAnswers.length;
   }
+  console.log("scoring  criiteria: ", quesIdx, numOfPlayers, numOfAnswers, numOfWrongAns);
   return quesIdx*100*(numOfPlayers  - numOfAnswers + 1 + (0.5*numOfWrongAns));
 }
 
@@ -504,6 +511,18 @@ methods.assignPoints = (roomId)=>{
         winner.points = calculatePoints(gameInfo);
         gameInfo.participants[winner.id].points += winner.points;
       }
+
+      //  Save the round points in the DB for the round ended.
+      // let  valuesToBeSaved = {
+      //   ques: currQues.question,
+      //   answers: currQues.answers,
+      //   roundResult
+      // };
+      let obj = {};
+      for(let p in gameInfo.participants) {
+        obj[p] = gameInfo.participants[p].points;
+      }
+      participantHandler.updateParticipantRoundInfo(obj,gameInfo.gameId, roomId);
       return {gameId: gameInfo.gameId, winner: gameInfo.participants[winner.id]};
     }
     return {gameId: gameInfo.gameId, winner: {}}

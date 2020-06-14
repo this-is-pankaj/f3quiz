@@ -1,0 +1,18 @@
+<div class="scoreboard" *ngIf="shouldDisplay()">
+  <div class="scoreboard-container">
+    <div class="scoreboard-title">
+      <h4>Score Board</h4>
+    </div>
+    <div class="admin-console text-center" *ngIf="isAdminConsole">
+      <!-- <button class="q-btn" (click)="highestScorer()">Highest Scorer</button> -->
+      <button  class="q-btn" (click)="closePopup()">Close</button>
+    </div>
+    <div class="scoreboard-wrapper">
+      <div [ngClass]="{'result': true, correct: res.status==='correct'}" *ngFor="let res of scoreBoard; let idx=index">
+        <p class="sl-no no-margin rank-{{idx+1}}">{{idx+1}}. <i class="fa fa-trophy" aria-hidden="true" *ngIf="idx===0"></i></p>
+        <p class="participant-name no-margin">{{res.name}}</p>
+        <p class="points text-center no-margin"><i class="fa fa-snowflake-o" aria-hidden="true"></i> {{res.points}}</p>
+      </div>
+    </div>
+  </div>
+</div>
