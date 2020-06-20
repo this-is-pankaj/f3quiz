@@ -42,7 +42,7 @@ export class AdminConsoleComponent implements OnInit {
       recorderType: StereoAudioRecorder,
       // Dialogflow / STT requires mono audio
       numberOfAudioChannels: 1,
-      timeSlice: 4000,
+      timeSlice: 50,
       ondataavailable: this.quizService.setAudio()
     });
     if(this.isSpeaking)

@@ -346,13 +346,19 @@ export class QuizService {
       this.setScoreBoardPopUpState(true);
     });
 
+    let audioCtx = new AudioContext();
     this.socket.on('adminSpeaks', (audio)=>{
-      console.log(audio);
-      let audioBlob = new Blob([audio.audio], { type: "audio/wav" });
-      console.log(audioBlob);
-      let audioElm = new Audio();
-      audioElm.src = window.URL.createObjectURL(audioBlob);
-      audioElm.play();
+      // let audioBlob = new Blob([audio.audio], { type: "audio/wav" });
+      let audioBuffer = audio.audio;
+      audioCtx.decodeAudioData(audioBuffer, (buffered)=>{
+        let source = audioCtx.createBufferSource(); // creates a sound source
+        source.buffer = buffered;                    // tell the source which sound to play
+        source.connect(audioCtx.destination);       // connect the source to the context's destination (the speakers)
+        source.start(0); 
+      })
+      // let audioElm = new Audio();
+      // audioElm.src = window.URL.createObjectURL(audioBlob);
+      // audioElm.play();
     })
 
     this.socket.on('gameOver', (msg)=>{
