@@ -11,6 +11,9 @@ import { Subscription } from 'rxjs';
 export class UserScreenComponent implements OnInit {
   pointSub: Subscription;
   points:Number = 0;
+  speakerSub: Subscription;
+  speaker = new AudioContext();
+
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService
@@ -24,6 +27,12 @@ export class UserScreenComponent implements OnInit {
     this.pointSub = quizService.getPoints()
       .subscribe((p)=>{
         this.points = p;
+      });
+
+    this.speakerSub = quizService.getVoice()
+      .subscribe((audio)=>{
+        console.log(audio);
+        // this.speaker.createBuffer(audio);
       })
   }
 
@@ -39,4 +48,8 @@ export class UserScreenComponent implements OnInit {
     return this.quizService.getPoints();
   }
 
+  playSound() {
+    let context = new AudioContext();
+    this.quizService.getVoice();
+  }
 }

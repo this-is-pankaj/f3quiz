@@ -6,6 +6,7 @@ import { Question } from '../../interfaces/question';
 import { Timer } from '../../interfaces/timer';
 import { Router } from '@angular/router';
 import { AppStatic } from '../../../../_helper/appStatic.constant';
+// import * as ss from 'socket.io-stream';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class QuizService {
     gameId:  ''
   };
 
+  // private stream = ss.createStream();
   private appStatic = AppStatic;
   private points = new Subject<Number>();
 
@@ -41,6 +43,8 @@ export class QuizService {
   private submitBtnActive:  Boolean = false;
 
   private showFastest: Boolean = false;
+
+  private soundBuffer = new Subject();
 
   private setPoints(points) {
     this.points.next(points);
@@ -93,6 +97,14 @@ export class QuizService {
     if(!val) {
       this.setSubmitBtnState(false);
     }
+  }
+
+  public getVoice() {
+    return  this.soundBuffer.asObservable();
+  }
+
+  private updateSoundBuffer(buffer) {
+    this.soundBuffer.next(buffer);
   }
 
   public getRoundResult():Observable<any> {
@@ -215,6 +227,31 @@ export class QuizService {
       this.socket.emit('changeScoreBoardPopUpState', {info: this.userInfo, state});
   }
 
+  public setAudio() {
+    let socket = this.socket,
+      info = this.userInfo;
+
+    return function(audio){
+      socket.emit('streamAudio', {
+        name: 'stream.wav',
+        size: audio.size,
+        blob: audio,
+        info
+      });
+    }
+    // making use of socket.io-stream for bi-directional
+    // streaming, create a stream
+    // ss(this.socket).emit('streamAudio', this.stream, {
+    //     name: 'stream.wav',
+    //     size: audio.size,
+    //     info: this.userInfo
+    // });
+    
+    // pipe the audio blob to the read stream
+    // ss.createBlobReadStream(audio).pipe(this.stream);
+    // this.socket.emit('streamAudio', {audio, info: this.userInfo});
+  }
+
   /**
    * This contains the list of all the received messages from the server. The data will be sent out accordingly.
    *
@@ -307,6 +344,15 @@ export class QuizService {
       console.log(msg);
       this.setScoreBoard(msg.participants);
       this.setScoreBoardPopUpState(true);
+    });
+
+    this.socket.on('adminSpeaks', (audio)=>{
+      console.log(audio);
+      let audioBlob = new Blob([audio.audio], { type: "audio/wav" });
+      console.log(audioBlob);
+      let audioElm = new Audio();
+      audioElm.src = window.URL.createObjectURL(audioBlob);
+      audioElm.play();
     })
 
     this.socket.on('gameOver', (msg)=>{

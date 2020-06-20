@@ -192,6 +192,16 @@ module.exports = (app)=>{
         return b.points - a.points;
       });
       io.in(participants.gameId).emit('showScoreBoard', {success: true, participants: participants.participants});  
+    });
+
+    socket.on('streamAudio', (msg)=>{
+      let info = transformInfo(msg.info),
+        gameInfo = handler.getGameInfo(info.roomId);
+
+      if(gameInfo){
+        console.log('============', msg.blob)
+        socket.broadcast.to(gameInfo.gameId).emit('adminSpeaks', {audio: msg.blob});
+      }
     })
 
     // socket.on('start game', () => gameManager.start());
