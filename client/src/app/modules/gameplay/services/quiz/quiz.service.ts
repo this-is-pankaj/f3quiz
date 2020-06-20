@@ -347,13 +347,16 @@ export class QuizService {
     });
 
     let audioCtx = new AudioContext();
+    let gainNode = audioCtx.createGain();
+    gainNode.gain.value = 3; // setting it to 3*100%
+    gainNode.connect(audioCtx.destination);
     this.socket.on('adminSpeaks', (audio)=>{
       // let audioBlob = new Blob([audio.audio], { type: "audio/wav" });
       let audioBuffer = audio.audio;
       audioCtx.decodeAudioData(audioBuffer, (buffered)=>{
         let source = audioCtx.createBufferSource(); // creates a sound source
         source.buffer = buffered;                    // tell the source which sound to play
-        source.connect(audioCtx.destination);       // connect the source to the context's destination (the speakers)
+        source.connect(gainNode);       // connect the source to the context's destination (the speakers)
         source.start(0); 
       })
       // let audioElm = new Audio();
