@@ -110,6 +110,10 @@ export class AdminConsoleComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(){
+    this.quizService.end();
+  }
+
   consoleButtons = [
     {
       text: "speak",

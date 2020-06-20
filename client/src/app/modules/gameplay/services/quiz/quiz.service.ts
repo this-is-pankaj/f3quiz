@@ -252,6 +252,9 @@ export class QuizService {
     // this.socket.emit('streamAudio', {audio, info: this.userInfo});
   }
 
+  public end() {
+    this.socket.disconnect();
+  }
   /**
    * This contains the list of all the received messages from the server. The data will be sent out accordingly.
    *
