@@ -13,7 +13,7 @@ export class UserScreenComponent implements OnInit {
   points:Number = 0;
   speakerSub: Subscription;
   speaker = new AudioContext();
-
+  
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService
@@ -51,5 +51,9 @@ export class UserScreenComponent implements OnInit {
   playSound() {
     let context = new AudioContext();
     this.quizService.getVoice();
+  }
+
+  getUserInfo() {
+    return this.quizService.getUserName();
   }
 }

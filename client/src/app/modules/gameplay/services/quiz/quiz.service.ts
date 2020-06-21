@@ -20,6 +20,8 @@ export class QuizService {
     gameId:  ''
   };
 
+  private userName = {};
+
   // private stream = ss.createStream();
   private appStatic = AppStatic;
   private points = new Subject<Number>();
@@ -54,6 +56,10 @@ export class QuizService {
 
   public getPoints() {
     return this.points.asObservable();
+  }
+
+  public getUserName() {
+    return this.userName;
   }
 
   activateButtons () {
@@ -275,6 +281,9 @@ export class QuizService {
         alert(msg.message);
         this.router.navigate([this.appStatic.defaultRoutes[this.userInfo.role].dashboard]);
       }
+      else {
+        this.userName = msg.user;
+      }
     });
 
     this.socket.on('question', (msg)=>{
@@ -344,12 +353,10 @@ export class QuizService {
     });
 
     this.socket.on('updatePoints', (msg)=>{ 
-      console.log(msg);
       this.setPoints(msg.points);
     });
 
     this.socket.on('showScoreBoard', (msg)=>{
-      console.log(msg);
       this.setScoreBoard(msg.participants);
       this.setScoreBoardPopUpState(true);
     });
@@ -373,7 +380,6 @@ export class QuizService {
     })
 
     this.socket.on('gameOver', (msg)=>{
-      console.log(msg);
       if(msg.success) {
         alert('Gaame Over.. Closing Room!');
         // navigate the user to the dashboard.

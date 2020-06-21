@@ -1,7 +1,8 @@
 .user-screen {
   .user-options {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    text-transform: capitalize;
     
     .score {
       font-size: 20px;
