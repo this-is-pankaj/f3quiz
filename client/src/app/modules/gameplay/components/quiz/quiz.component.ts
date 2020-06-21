@@ -91,6 +91,10 @@ export class QuizComponent implements OnInit {
     }
   }
 
+  getReference() {
+    return this.quizService.getQuestionReference();
+  }
+
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.questionSub.unsubscribe();

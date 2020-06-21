@@ -46,6 +46,8 @@ export class QuizService {
 
   private soundBuffer = new Subject();
 
+  private referenceUrl='';
+
   private setPoints(points) {
     this.points.next(points);
   }
@@ -56,6 +58,10 @@ export class QuizService {
 
   activateButtons () {
     return this.isGameOn;
+  }
+
+  public getQuestionReference() {
+    return (this.referenceUrl && this.referenceUrl.length)? this.referenceUrl: false;
   }
 
   public isSubmitButtonActive() {
@@ -101,10 +107,6 @@ export class QuizService {
 
   public getVoice() {
     return  this.soundBuffer.asObservable();
-  }
-
-  private updateSoundBuffer(buffer) {
-    this.soundBuffer.next(buffer);
   }
 
   public getRoundResult():Observable<any> {
@@ -193,6 +195,7 @@ export class QuizService {
 
   public getNextQuestion() {
     this.socket.emit('getNextQues', this.userInfo);
+    this.referenceUrl = '';
   }
 
   public getOptions() {
@@ -315,6 +318,8 @@ export class QuizService {
 
     this.socket.on('displayAnswer', (msg)=>{
       this.setOptions(msg.correctAns.answer);
+      // Set the reference answer for the current question
+      this.referenceUrl = msg.correctAns.referenceURL;
     });
 
     this.socket.on('displayRoundResult', (msg)=>{

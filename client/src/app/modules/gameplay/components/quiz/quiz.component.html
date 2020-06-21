@@ -20,6 +20,9 @@
       <div class="timer" *ngIf="timer['text']">
         <p class="no-margin timer-text text-center">{{timer['text']}}s</p>
       </div>
+      <div class="reference-wrapper" *ngIf="getReference()">
+        <p class="no-margin">Click <a href="{{getReference()}}" target="_blank" class="q-link">Here</a> to learn more on this.</p>
+      </div>
     </div>
   </div>
 </div>
