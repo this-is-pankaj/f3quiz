@@ -1,0 +1,24 @@
+.joinees {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  
+  .update-text {
+    position: absolute;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+
+    &.entered {
+      background: #28a745;
+      color: #fff;
+    }
+  
+    &.left {
+      background: #dc3545;
+      color: #fff;
+    }
+  }
+}

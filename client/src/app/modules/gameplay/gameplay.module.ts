@@ -10,9 +10,10 @@ import { AdminConsoleComponent } from './components/admin-console/admin-console.
 import { SharedModule } from '../shared/shared.module';
 import { ResultsComponent } from './components/results/results.component';
 import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
+import { JoineesComponent } from './components/joinees/joinees.component';
 
 @NgModule({
-  declarations: [QuizComponent, UserScreenComponent, AdminScreenComponent, AdminConsoleComponent, ResultsComponent, ScoreboardComponent],
+  declarations: [QuizComponent, UserScreenComponent, AdminScreenComponent, AdminConsoleComponent, ResultsComponent, ScoreboardComponent, JoineesComponent],
   providers: [
     QuizService
   ],

@@ -21,6 +21,7 @@ export class QuizService {
   };
 
   private userName = {};
+  private participantInfo = {};
 
   // private stream = ss.createStream();
   private appStatic = AppStatic;
@@ -60,6 +61,10 @@ export class QuizService {
 
   public getUserName() {
     return this.userName;
+  }
+
+  public getParticipantInfo() {
+    return this.participantInfo;
   }
 
   activateButtons () {
@@ -285,6 +290,13 @@ export class QuizService {
         this.userName = msg.user;
       }
     });
+
+    this.socket.on('playerConnected', (msg)=>{
+      if(msg.success) {
+        this.participantInfo['user'] = msg.user;
+        this.participantInfo['type'] = msg.type;
+      }
+    })
 
     this.socket.on('question', (msg)=>{
       if(msg.success) {

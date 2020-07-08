@@ -70,7 +70,11 @@ module.exports = (app)=>{
 
       if(res)  {
         socket.join(res.gameId);
+        // Send user the info on his name to be displayed..
         socket.emit('Connected', {success: true, user: res.participants[info.userId].name});
+        // Send all users informattion that the player joined room
+        io.in(res.gameId).emit('playerConnected', {success: true, user: res.participants[info.userId].name, type: 'entered'});
+
         // If there is any question displayed or in progress, share the  details
         if(res.currentQues && res.currentQues.question.text.length) {
           let ques = Object.assign({}, res.currentQues.question, {num: res.currentQues.num});
