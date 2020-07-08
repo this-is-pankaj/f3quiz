@@ -292,6 +292,7 @@ export class QuizService {
         this.setQuestion(msg.ques);
         this.setOptions([]);
         this.setSubmitBtnState(false);  //  Disable the button on new  question  arrival
+        this.referenceUrl = '';
       }
       else{
         console.log(`Unable to get questions`);

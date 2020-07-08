@@ -254,34 +254,40 @@ methods.getNextQuestion = (roomId) => {
     currQuesNum = gameInfo.currentQues.num;
   // Select the next question to be displayed
   let totalQues = 0;
-  for(let lvl in levels) {
-    let numOfQuesInThisLvl = levels[lvl].numOfQuestion;
-    totalQues += numOfQuesInThisLvl;
-    // If questionNum is less than the total so far, it means this level  question needs to be delivered
-    if(currQuesNum < totalQues){
-      let qListLen = gameInfo.qBank[lvl].qList.length;
-      let getQuesIdx  = utils.generateRand(0, qListLen-1);
-      let ques = gameInfo.qBank[lvl].qList[getQuesIdx];
-      gameInfo.currentQues.num += 1;
-      gameInfo.currentQues.id = ques._id;
-      gameInfo.currentQues.question = {
-        text: ques.question,
-        level: ques.level,
-        submittedBy: ques.createdBy
-      };
-      gameInfo.currentQues.options = ques.options;
-      gameInfo.currentQues.reference = ques.reference;
-      gameInfo.currentQues.roundResult = [];
-      gameInfo.currentQues.answers = {};
-      // Delete the question from  the qBank to prevent repeatation of the question
-      gameInfo.qBank[lvl].qList.splice(getQuesIdx, 1);
-      break;
+
+  try{
+    for(let lvl in levels) {
+      let numOfQuesInThisLvl = levels[lvl].numOfQuestion;
+      totalQues += numOfQuesInThisLvl;
+      // If questionNum is less than the total so far, it means this level  question needs to be delivered
+      if(currQuesNum < totalQues){
+        let qListLen = gameInfo.qBank[lvl].qList.length;
+        let getQuesIdx  = utils.generateRand(0, qListLen-1);
+        let ques = gameInfo.qBank[lvl].qList[getQuesIdx];
+        gameInfo.currentQues.num += 1;
+        gameInfo.currentQues.id = ques._id;
+        gameInfo.currentQues.question = {
+          text: ques.question,
+          level: ques.level,
+          submittedBy: ques.createdBy
+        };
+        gameInfo.currentQues.options = ques.options;
+        gameInfo.currentQues.reference = ques.reference;
+        gameInfo.currentQues.roundResult = [];
+        gameInfo.currentQues.answers = {};
+        // Delete the question from  the qBank to prevent repeatation of the question
+        gameInfo.qBank[lvl].qList.splice(getQuesIdx, 1);
+        break;
+      }
+    }
+    
+    return {
+      gameId: gameInfo.gameId,
+      ques: gameInfo.currentQues
     }
   }
-  
-  return {
-    gameId: gameInfo.gameId,
-    ques: gameInfo.currentQues
+  catch(exc) {
+    LOG.alert(`${component}.getNextQuestion.exc`, gameInfo.reqId, `${exc}`)
   }
 }
 
