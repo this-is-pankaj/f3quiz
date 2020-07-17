@@ -11,11 +11,11 @@ const _Constants = {
         level: 2
       },
       level3: {
-        numOfQuestion: 2,
+        numOfQuestion: 3,
         level: 3
       },
       level4: {
-        numOfQuestion: 3,
+        numOfQuestion: 2,
         level: 4
       }
     },
