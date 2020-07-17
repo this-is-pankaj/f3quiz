@@ -21,6 +21,9 @@ export class QuestionBankService {
       .pipe(
         map((res) => {
           console.log(res);
+          if(res.status === 200) {
+            alert("Added  Successfully!");
+          }
           return res.body;
         }),
         catchError(that.handleError)
